@@ -35,7 +35,7 @@ def write_pixels(pixels):
         logi.logiWrite(MAT_ADDR, frame_buffer)
 
 
-def render_character(character_bytes, on_symbol):
+def render_character(character_bytes, on_symbol=ON_SYMBOL):
     print_buffer = ''
     character_matrix = []
 
@@ -67,19 +67,7 @@ def flatten_row_buffers(row_buffers):
 def make_frame_pixels(ordinals, column_limit=-1):
     COLOR = 755
 
-    try:
-        # bitmaps = [render_character(ord_matrix[ordinal]) for ordinal in ordinals]
-        bitmaps = []
-        bitmaps.append(render_character(ord_matrix[ord('G')], 'G'))
-        bitmaps.append(render_character(ord_matrix[ord('B')], 'G'))
-        bitmaps.append(render_character(ord_matrix[ord('2')], 'B'))
-        bitmaps.append(render_character(ord_matrix[ord('7')], 'B'))
-        bitmaps.append(render_character(ord_matrix[ord('C')], 'G'))
-        bitmaps.append(render_character(ord_matrix[ord('H')], 'G'))
-        bitmaps.append(render_character(ord_matrix[ord('2')], 'B'))
-        bitmaps.append(render_character(ord_matrix[ord('7')], 'B'))
-    except IndexError:
-        bitmaps = [render_character(ord_matrix[0], 'G') for _ in ordinals]
+    bitmaps = [render_character(ord_matrix[ordinal]) for ordinal in ordinals]
 
     row_buffers = []
     for grouped_rows in zip(*bitmaps):
@@ -93,9 +81,11 @@ def make_frame_pixels(ordinals, column_limit=-1):
         row_characters = row_characters.ljust(PIXEL_COLS, '0')
         print row_characters
 
-        # row_buffers.append([symbol for symbol in row_characters])
-        mapp = {'G': 755, 'B': 255, ' ': 0}
-        row_buffers.append([mapp[symbol] for symbol in row_characters])
+        row_buffers.append([COLOR if symbol != OFF_SYMBOL else 0 for symbol in row_characters])
+
+        # Work in progress to get colored characters- ignore...
+        # symbol_color_map = {'G': 755, 'B': 255, ' ': 0}
+        # row_buffers.append([symbol_color_map[symbol] for symbol in row_characters])
 
     while len(row_buffers) < PIXEL_ROWS - 1:
         row_buffers.append([0] * PIXEL_COLS)
