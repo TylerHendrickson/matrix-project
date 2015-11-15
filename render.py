@@ -20,7 +20,7 @@ OFF_SYMBOL = ' '
 
 
 def buffer_from_pixels(pixels):
-    frame_buffer = [0] * (PIXEL_ROWS * PIXEL_COLS * 8)
+    frame_buffer = [0] * (PIXEL_ROWS * PIXEL_COLS * 2)
     i = 0
     for p in pixels:
         frame_buffer[i] = p & 0x00FF
